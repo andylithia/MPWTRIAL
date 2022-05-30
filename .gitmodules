@@ -1,0 +1,3 @@
+[submodule "patently-obvious"]
+	path = patently-obvious
+	url = https://gitlab.com/robweinstein/patently-obvious

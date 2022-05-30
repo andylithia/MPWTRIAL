@@ -16,8 +16,8 @@
  */
 
 // This include is relative to $CARAVEL_PATH (see Makefile)
-#include <defs.h>
-#include <stub.c>
+#include "defs.h"
+#include "stub.c"
 
 /*
 	IO Test:
