@@ -130,7 +130,8 @@ module control_and_timing_16_a #(
     input           COL2,           //                   "       "      "   2
     input           COL3,           //                   "       "      "   3
     input           COL4,           //                   "       "      "   4
-    input           COL6            //                   "       "      "   6
+    input           COL6,           //                   "       "      "   6
+    output [5:0]    dbg_q
 );
 
     // Debug signals
@@ -140,6 +141,7 @@ module control_and_timing_16_a #(
 
     reg         pwor        = 1'b0;
     reg [5:0]   q           = 'b0;
+    assign dbg_q = q;
     reg         T1          = 1'b0;
     reg         T2          = 1'b0;
     reg         T3          = 1'b0;
