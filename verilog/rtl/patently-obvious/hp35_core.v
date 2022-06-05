@@ -1,7 +1,26 @@
-// hp 35 wrapper
+// SPDX-FileCopyrightText: 2022 AnalogMiko
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+// -- hp 35 wrapper --
 // The Display chips are excluded
 // Compared to the original source code written by R. J. Weinstein, 
 // the only major change is that the inout ports are replaced by MUX counterparts
+//
+// (c) AL Jun 4th 2022
+// AnalogMiko.com
 
 module hp35_core(
     // output [7:0] ROW,       // Keyboard Scan ROW,     Output from CTC
@@ -24,8 +43,7 @@ module hp35_core(
     
     input        ws_in,     // Word Select Bus,  from CTC or ROM to ARC
     output       ws_bus,    // Word Select Bus,  from 
-    output       ws_oe,     //
-    
+    output       ws_oe,   
     input        bcd_in,    // BCD Peripheral Bus, from RAM to ARC
     output       bcd_bus,   // BCD Peripheral Bus, from ARC to RAM
     output       bcd_oe,    // BCD Bus Enable,     from ARC to RAM
@@ -58,6 +76,7 @@ module hp35_core(
     output [5:0] dbg_ctc_q,
 
     // SRAM WR Port
+    /*
     input         sram_clk0,
     input         sram_csb0,
     input         sram_web0,
@@ -65,8 +84,16 @@ module hp35_core(
 //    input         sram_sdin,            // The input is serialized to save some IO pins
 //    input         sram_wclk             // /
 //    input [3:0]   sram_wmask0,
-    input [31:0]  sram_din0,
-    output [31:0] sram_dout0        // Unconnected
+    input [31:0]  sram_din0
+    // output [31:0] sram_dout0        // Unconnected
+    */
+
+    // Update Jun 4: The SRAM is causing P&R issues
+    // Moving it to the top level
+
+    output        sram_clk1,
+    output [7:0]  sraddr_mux,
+    input  [31:0] srdata
 );
 
 // Controls
@@ -133,8 +160,9 @@ reg        ws_oe;
 wire [7:0] sraddr[2:0];
 wire [2:0] srprelatch;
 wire [7:0] sraddr_mux;
-reg [31:0] srdata;
-wire       sram_clk1;
+// reg [31:0] srdata;
+wire [31:0] srdata;
+wire        sram_clk1;
 
 // Debug Connectors (To be connected to the Caravel LA interface)
 wire       dbg_enable_ctc;
@@ -153,22 +181,22 @@ wire       dbg_ctc_kdn;
 
 // ** A R C
 arithmetic_and_register_20_a u_ARC(
-    .A(DD[0]),.B(DD[1]),.C(DD[2]),.D(DD[3]),.E(DD[4]),  // Display Bus
-    .START      (START              ),  // Display Control
-    .CARRY      (carry_drive_arc    ),  // From ARC to CTC                  
-    .dbg_dsbf3  (dbg_dsbf[3]        ),  // Internal Display Buffer 
+    .A(DD[0]),.B(DD[1]),.C(DD[2]),.D(DD[3]),.E(DD[4]),  // -> Display Bus
+    .START      (START              ),  // -> Display Control
+    .CARRY      (carry_drive_arc    ),  // ARC -> CTC             
+    .dbg_dsbf3  (dbg_dsbf[3]        ),  // Internal Display Buffer -> DBG
     .dbg_dsbf2  (dbg_dsbf[2]        ),  // |
     .dbg_dsbf1  (dbg_dsbf[1]        ),  // |
     .dbg_dsbf0  (dbg_dsbf[0]        ),  // |
     .dbg_dsbf_dp(dbg_dsbf[4]        ),  // /
-    .dbg_t1     (dbg_arc_t1         ),  // Timing Register
-    .dbg_t4     (dbg_arc_t4         ),  // Timing Register
-    .dbg_regA1  (dbg_arc_a1         ),  // Register A
-    .dbg_regB1  (dbg_arc_b1         ),  // Register B
-    .PHI2       (phi2               ),  // Global Clock
-    .IS         (is_bus             ),  // From CTC/ROM to ARC
-    .WS         (ws_bus             ),  // From CTC/ROM to ARC
-    .SYNC       (sync_bus           ),  // Global SYNC Signal, from CTC
+    .dbg_t1     (dbg_arc_t1         ),  // Timing Register -> DBG
+    .dbg_t4     (dbg_arc_t4         ),  // Timing Register -> DBG
+    .dbg_regA1  (dbg_arc_a1         ),  //      Register A -> DBG
+    .dbg_regB1  (dbg_arc_b1         ),  //      Register B -> DBG
+    .PHI2       (phi2               ),  // CTC -> Global Clock
+    .IS         (is_bus             ),  // CTC/ROM -> ARC
+    .WS         (ws_bus             ),  // CTC/ROM -> ARC
+    .SYNC       (sync_bus           ),  // CTC -> Global SYNC Signal
     .bcd_in     (bcd_in             ),  // Tristate Bus, ARC <-> RAM
     .bcd_active (bcd_internal_active),  // |
     .bcd_out    (bcd_internal_drive ),  // /
@@ -226,6 +254,7 @@ always @(posedge sram_wclk) begin
 end
 */
 // Instantiate SRAM
+/*
 sky130_sram_1kbyte_1rw1r_32x256_8 u_SRAM(
     .clk0  (sram_clk0    ),
     .addr0 (sram_addr0   ),
@@ -241,6 +270,7 @@ sky130_sram_1kbyte_1rw1r_32x256_8 u_SRAM(
     .dout1 (srdata       )  // 
 );
 
+*/
 
 // Implementation of the buses
 // Use MUX instead of Tri-state buffers 
@@ -289,12 +319,12 @@ always @* begin
         1'b1:     carry_bus = carry_drive_arc;
         default:  carry_bus = carry_in;
     endcase
-
+    
     case ({dbg_internal_cdiv})
         1'b1:     {phi1, phi2} = {phi1_out, phi2_out};
         default:  {phi1, phi2} = {phi1_in,  phi2_in };
     endcase
-
+    
 end
 
 
