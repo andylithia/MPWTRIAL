@@ -1,6 +1,6 @@
 ###############################################################################
 # Created by write_sdc
-# Sat Jun  4 23:57:38 2022
+# Sun Jun  5 16:46:09 2022
 ###############################################################################
 current_design hp35_core
 ###############################################################################
@@ -63,8 +63,6 @@ set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdat
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[28]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[29]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[2]}]
-set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[30]}]
-set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[31]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[3]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[4]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[5]}]
@@ -202,8 +200,6 @@ set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_ris
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_romdata[2]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_romdata[1]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_romdata[0]}]
-set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[31]}]
-set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[30]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[29]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[28]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[27]}]

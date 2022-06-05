@@ -93,7 +93,7 @@ module hp35_core(
 
     output        sram_clk1,
     output [7:0]  sraddr_mux,
-    input  [31:0] srdata
+    input  [29:0] srdata
 );
 
 // Controls
@@ -161,7 +161,7 @@ wire [7:0] sraddr[2:0];
 wire [2:0] srprelatch;
 wire [7:0] sraddr_mux;
 // reg [31:0] srdata;
-wire [31:0] srdata;
+wire [29:0] srdata;
 wire        sram_clk1;
 
 // Debug Connectors (To be connected to the Caravel LA interface)
@@ -237,7 +237,7 @@ generate
             .TP_ROE   (dbg_rom_roe[gi]       ),
             .sraddr   (sraddr[gi]            ),
             .srprelatch(srprelatch[gi]       ),
-            .srdata   (srdata                ),
+            .srdata   ({2'b0,srdata}         ),
             .dbg_force_data(dbg_force_data   ),
             .forcedata(dbg_romdata           )
         );

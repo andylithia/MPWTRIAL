@@ -14,6 +14,9 @@
 // WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// SPDX-License-Identifier: ISC
+//
 //-----------------------------------------------------------------------
 //
 // FileName:
@@ -271,18 +274,11 @@ module read_only_memory_18_a #(
         end
     end
     */
-    
+    wire [9:0] romd;
+    assign romd = srdata[10*(RomNum+1)-1:10*(RomNum)];
     always @* begin
-        if(dbg_force_data) begin
-            rom = forcedata;
-        end else begin
-            if(RomNum==0) 
-                rom = srdata[9:0];
-            else if (RomNum==1)
-                rom = srdata[19:0];
-            else if (RomNum==2)
-                rom = srdata[29:20];
-        end
+        if(dbg_force_data) rom = forcedata;
+        else               rom = romd;
     end
 
 // =================================================================================================

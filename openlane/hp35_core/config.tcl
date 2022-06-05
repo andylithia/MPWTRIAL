@@ -49,9 +49,9 @@ set ::env(SYNTH_READ_BLACKBOX_LIB) 1
 ## Floorplan
 set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
 set ::env(FP_SIZING) absolute
-set ::env(DIE_AREA) "0 0 500 1500"
+set ::env(DIE_AREA) "0 0 350 400"
 
-set ::env(PL_TARGET_DENSITY) 0.15
+set ::env(PL_TARGET_DENSITY) 0.35
 set ::env(CELL_PAD) 0
 # set ::env(PL_BASIC_PLACEMENT) 1
 

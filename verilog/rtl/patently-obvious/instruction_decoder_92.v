@@ -1,4 +1,6 @@
 //------------------------------------------------------------------------------
+// SPDX-FileCopyrightText: Copyright (c) 2022 Robert J. Weinstein
+// 
 // OpenBSD License
 // 
 // Copyright (c) 2022 Robert J. Weinstein
@@ -14,6 +16,9 @@
 // WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// SPDX-License-Identifier: ISC
+//
 //------------------------------------------------------------------------------
 //
 // FileName:
@@ -51,7 +56,7 @@
 //          bits are saved in Is register 90 and decoded by instruction decoder
 //          92 into one of 32 instructions.
 //             The ARITHMETIC & REGISTER instructions are active or operative
-//          only when the Word Select signal (WS) generated in one of the ROM’s
+//          only when the Word Select signal (WS) generated in one of the ROMï¿½s
 //          0-7 or in control and timing circuit 16 is at logic 1. For instance,
 //          suppose the instruction "A+C -> C, mantissa with sign only" is
 //          called. Arithmetic and register circuit 20 decodes only A+C -> C. It
@@ -92,6 +97,9 @@
 //
 // 14-Feb-2022 rjw
 //    Released as open-source.
+// 05-Jun-2022 AL
+//    Modified for SPDX
+//
 //
 // -----------------------------------------------------------------------------
 `timescale 1ns / 1ps
@@ -488,7 +496,7 @@ module instruction_decoder_92 (
                     {c2c, con2c} = {~WS, WS};   // isreg[9:6] -> C
                 end
                 // Display -------------------------------------------------------------------------------------------------------------------------------------
-                // '569 (23):  "The display flip-flop in arithmetic and register circuit 20 controls blanking of all the LED’s.  When it is reset, the 1111 code
+                // '569 (23):  "The display flip-flop in arithmetic and register circuit 20 controls blanking of all the LEDï¿½s.  When it is reset, the 1111 code
                 // is set into the display buffer 96, which is decoded so that no segments are on.  There is one instruction to reset this flip-flop I9 I8 I7 =
                 // (100) and another to toggle it (000).  The toggle feature is convenient for blinking the display."
                 6'b000_01? : begin  // Display Toggle

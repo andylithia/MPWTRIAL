@@ -1,0 +1,1 @@
+load hp35_core -dereference;	select top cell;	foreach cell [cellname list children] {		load $cell -dereference;		property LEFview TRUE;	};	load hp35_core -dereference;	select top cell;	extract no all;	extract do local;	extract;	ext2spice lvs;	ext2spice hp35_core.ext;	feedback save extract_hp35_core.log;	exit;
