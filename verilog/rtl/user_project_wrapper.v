@@ -61,7 +61,9 @@ module user_project_wrapper #(
     input  [127:0] la_oenb,
 
     // IOs
-    `define MPRJ_IO_PADS 38
+    `ifndef MPRJ_IO_PADS
+        `define MPRJ_IO_PADS 38
+    `endif /* MPRJ_IO_PADS */
     input  [`MPRJ_IO_PADS-1:0] io_in,
     output [`MPRJ_IO_PADS-1:0] io_out,
     output [`MPRJ_IO_PADS-1:0] io_oeb,
