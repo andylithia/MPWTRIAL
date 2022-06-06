@@ -64,6 +64,7 @@ module io_ports_tb;
 	end
 
 	initial begin
+		$finish;
 	    // Observe Output pins [7:0]
 		wait(mprj_io_0 == 8'h01);
 		wait(mprj_io_0 == 8'h02);

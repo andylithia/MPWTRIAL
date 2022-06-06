@@ -44,6 +44,7 @@ module wb_port_tb;
 	end
 
 	initial begin
+		$finish;
 		$dumpfile("wb_port.vcd");
 		$dumpvars(0, wb_port_tb);
 

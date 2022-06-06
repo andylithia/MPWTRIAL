@@ -37,6 +37,7 @@ module la_test2_tb;
 	end
 
 	initial begin
+		$finish;
 		$dumpfile("la_test2.vcd");
 		$dumpvars(0, la_test2_tb);
 

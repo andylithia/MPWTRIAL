@@ -53,7 +53,7 @@
 | mprj_io[11]        | 1  | TRISTATE | IA              | Address Bus
 | mprj_io[10]        | 1  | TRISTATE | CARRY           | Carry Bus
 | mprj_io[9]         | 1  | TRISTATE | SYNC            | Global Sync
-| mprj_io[8]         | 1  | ANALOG   | ?               | Disable ROM
+| mprj_io[8]         | 1  | IN       | external_clk    | External Clock (prediv)
 |↑Pin↑   ↓LA↓    |    |          |                 | 
 | la_data_in[63:0]   | 32 | READ     | TDC_dout[63:0]  | TDC Parallel Data
 | la_data_in[64]     | 1  | READ     | PWO             |

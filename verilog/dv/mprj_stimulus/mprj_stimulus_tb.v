@@ -41,6 +41,7 @@ module mprj_stimulus_tb;
     end
 
     initial begin
+		$finish;
         $dumpfile("mprj_stimulus.vcd");
         $dumpvars(0, mprj_stimulus_tb);
 

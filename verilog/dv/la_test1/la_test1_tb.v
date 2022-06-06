@@ -41,6 +41,7 @@ module la_test1_tb;
 	// assign mprj_io[3] = 1'b1;
 
 	initial begin
+		$finish;
 		$dumpfile("la_test1.vcd");
 		$dumpvars(0, la_test1_tb);
 
