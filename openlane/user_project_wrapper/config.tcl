@@ -82,7 +82,7 @@ set ::env(GLB_RT_OBS)   "li1 500.00 1000.00 979.78 1397.5, \
 
 # disable pdn check nodes becuase it hangs with multiple power domains.
 # any issue with pdn connections will be flagged with LVS so it is not a critical check.
-set ::env(FP_PDN_CHECK_NODES) 1
+set ::env(FP_PDN_CHECK_NODES) 0
 
 # The following is because there are no std cells in the example wrapper project.
 set ::env(SYNTH_TOP_LEVEL) 1
@@ -102,9 +102,9 @@ set ::env(CLOCK_TREE_SYNTH) 0
 
 set ::env(MAGIC_DRC_USE_GDS) 0
 set ::env(ROUTING_CORES) 4
-# set ::env(SYNTH_USE_PG_PINS_DEFINES) "USE_POWER_PINS"
+set ::env(SYNTH_USE_PG_PINS_DEFINES) "USE_POWER_PINS"
 # set ::env(FP_PDN_CORE_RING) 1
-# set ::env(VDD_NETS) "vccd1 vccd2 vdda1 vdda2"
-# set ::env(GND_NETS) "vssd1 vssd2 vssa1 vssa2"
-set ::env(VDD_NETS) "vccd1"
-set ::env(GND_NETS) "vssd1"
+set ::env(VDD_NETS) "vccd1 vccd2 vdda1 vdda2"
+set ::env(GND_NETS) "vssd1 vssd2 vssa1 vssa2"
+# set ::env(VDD_NETS) "vccd1"
+# set ::env(GND_NETS) "vssd1"
