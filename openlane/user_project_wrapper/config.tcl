@@ -39,14 +39,14 @@ set ::env(VERILOG_FILES) "\
 
 ## Clock configurations
 set ::env(CLOCK_PORT) "user_clock2"
-set ::env(CLOCK_NET) "mprj.clk"
-
+set ::env(CLOCK_NET) "user_clock2"
 set ::env(CLOCK_PERIOD) "10"
 
 ## Internal Macros
 ### Macro PDN Connections
 set ::env(FP_PDN_MACRO_HOOKS) "\
-	mprj vccd1 vssd1"
+	u_hp35_core vccd1 vssd1 \
+	u_SRAM vccd1 vssd1"
 
 ### Macro Placement
 set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
@@ -54,20 +54,35 @@ set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
 ### Black-box verilog and views
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$::env(CARAVEL_ROOT)/verilog/rtl/defines.v \
-	$script_dir/../../verilog/rtl/user_proj_example.v"
+	$script_dir/../../verilog/rtl/patently-obvious/hp35_core.v\
+	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/verilog/sky130_sram_1kbyte_1rw1r_32x256_8.v"
 
 set ::env(EXTRA_LEFS) "\
-	$script_dir/../../lef/user_proj_example.lef"
+	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/lef/sky130_sram_1kbyte_1rw1r_32x256_8.lef\
+	$script_dir/../../lef/hp35_core.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-	$script_dir/../../gds/user_proj_example.gds"
+	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/gds/sky130_sram_1kbyte_1rw1r_32x256_8.gds\
+	$script_dir/../../gds/hp35_core.gds"
 
-# set ::env(GLB_RT_MAXLAYER) 5
+## Internal Macros
+#set ::env(EXTRA_LIBS) "\
+#	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/lib/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
+
 set ::env(RT_MAX_LAYER) {met4}
+
+
+set ::env(GLB_RT_OBS)   "li1 500.00 1000.00 979.78 1397.5, \
+						met1 500.00 1000.00 979.78 1397.5, \
+						met2 500.00 1000.00 979.78 1397.5, \
+						met3 500.00 1000.00 979.78 1397.5, \
+						met4 500.00 1000.00 979.78 1397.5, \
+		       			met5 0 0 2920 3520"
+
 
 # disable pdn check nodes becuase it hangs with multiple power domains.
 # any issue with pdn connections will be flagged with LVS so it is not a critical check.
-set ::env(FP_PDN_CHECK_NODES) 0
+set ::env(FP_PDN_CHECK_NODES) 1
 
 # The following is because there are no std cells in the example wrapper project.
 set ::env(SYNTH_TOP_LEVEL) 1
@@ -84,3 +99,12 @@ set ::env(DIODE_INSERTION_STRATEGY) 0
 set ::env(FILL_INSERTION) 0
 set ::env(TAP_DECAP_INSERTION) 0
 set ::env(CLOCK_TREE_SYNTH) 0
+
+set ::env(MAGIC_DRC_USE_GDS) 0
+set ::env(ROUTING_CORES) 4
+# set ::env(SYNTH_USE_PG_PINS_DEFINES) "USE_POWER_PINS"
+# set ::env(FP_PDN_CORE_RING) 1
+# set ::env(VDD_NETS) "vccd1 vccd2 vdda1 vdda2"
+# set ::env(GND_NETS) "vssd1 vssd2 vssa1 vssa2"
+set ::env(VDD_NETS) "vccd1"
+set ::env(GND_NETS) "vssd1"

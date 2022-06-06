@@ -12,7 +12,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 19.410 396.000 19.690 400.000 ;
+        RECT 16.650 396.000 16.930 400.000 ;
     END
   END COL[0]
   PIN COL[1]
@@ -20,7 +20,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 32.290 396.000 32.570 400.000 ;
+        RECT 28.150 396.000 28.430 400.000 ;
     END
   END COL[1]
   PIN COL[2]
@@ -28,7 +28,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 45.170 396.000 45.450 400.000 ;
+        RECT 39.190 396.000 39.470 400.000 ;
     END
   END COL[2]
   PIN COL[3]
@@ -36,7 +36,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 58.050 396.000 58.330 400.000 ;
+        RECT 50.690 396.000 50.970 400.000 ;
     END
   END COL[3]
   PIN COL[4]
@@ -44,7 +44,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 70.930 396.000 71.210 400.000 ;
+        RECT 61.730 396.000 62.010 400.000 ;
     END
   END COL[4]
   PIN DD[0]
@@ -92,7 +92,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 135.790 396.000 136.070 400.000 ;
+        RECT 129.810 396.000 130.090 400.000 ;
     END
   END PWO
   PIN START
@@ -100,7 +100,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 149.130 396.000 149.410 400.000 ;
+        RECT 140.850 396.000 141.130 400.000 ;
     END
   END START
   PIN bcd_bus
@@ -108,7 +108,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 252.630 396.000 252.910 400.000 ;
+        RECT 231.010 396.000 231.290 400.000 ;
     END
   END bcd_bus
   PIN bcd_in
@@ -116,23 +116,23 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 239.750 396.000 240.030 400.000 ;
+        RECT 219.970 396.000 220.250 400.000 ;
     END
   END bcd_in
-  PIN bcd_oe
+  PIN bcd_oen
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 265.510 396.000 265.790 400.000 ;
+        RECT 242.510 396.000 242.790 400.000 ;
     END
-  END bcd_oe
+  END bcd_oen
   PIN carry_bus
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 304.610 396.000 304.890 400.000 ;
+        RECT 287.590 396.000 287.870 400.000 ;
     END
   END carry_bus
   PIN carry_in
@@ -140,9 +140,17 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 317.490 396.000 317.770 400.000 ;
+        RECT 299.090 396.000 299.370 400.000 ;
     END
   END carry_in
+  PIN carry_oen
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 310.130 396.000 310.410 400.000 ;
+    END
+  END carry_oen
   PIN cdiv_rst
     DIRECTION INPUT ;
     USE SIGNAL ;
@@ -255,6 +263,30 @@ MACRO hp35_core
         RECT 346.000 66.000 350.000 66.600 ;
     END
   END dbg_ctc_state1
+  PIN dbg_disable_arc
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 314.730 0.000 315.010 4.000 ;
+    END
+  END dbg_disable_arc
+  PIN dbg_disable_ctc
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 328.990 0.000 329.270 4.000 ;
+    END
+  END dbg_disable_ctc
+  PIN dbg_disable_rom
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 342.790 0.000 343.070 4.000 ;
+    END
+  END dbg_disable_rom
   PIN dbg_dsbf[0]
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
@@ -295,30 +327,6 @@ MACRO hp35_core
         RECT 346.000 317.600 350.000 318.200 ;
     END
   END dbg_dsbf[4]
-  PIN dbg_enable_arc
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER met2 ;
-        RECT 314.730 0.000 315.010 4.000 ;
-    END
-  END dbg_enable_arc
-  PIN dbg_enable_ctc
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER met2 ;
-        RECT 328.990 0.000 329.270 4.000 ;
-    END
-  END dbg_enable_ctc
-  PIN dbg_enable_rom
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER met2 ;
-        RECT 342.790 0.000 343.070 4.000 ;
-    END
-  END dbg_enable_rom
   PIN dbg_force_data
     DIRECTION INPUT ;
     USE SIGNAL ;
@@ -452,7 +460,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 291.730 396.000 292.010 400.000 ;
+        RECT 265.050 396.000 265.330 400.000 ;
     END
   END ia_bus
   PIN ia_in
@@ -460,15 +468,23 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 278.390 396.000 278.670 400.000 ;
+        RECT 254.010 396.000 254.290 400.000 ;
     END
   END ia_in
+  PIN ia_oen
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 276.550 396.000 276.830 400.000 ;
+    END
+  END ia_oen
   PIN is_bus
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 174.890 396.000 175.170 400.000 ;
+        RECT 163.390 396.000 163.670 400.000 ;
     END
   END is_bus
   PIN is_in
@@ -476,23 +492,23 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 162.010 396.000 162.290 400.000 ;
+        RECT 152.350 396.000 152.630 400.000 ;
     END
   END is_in
-  PIN is_oe
+  PIN is_oen
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 187.770 396.000 188.050 400.000 ;
+        RECT 174.890 396.000 175.170 400.000 ;
     END
-  END is_oe
+  END is_oen
   PIN osc_in
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 6.530 396.000 6.810 400.000 ;
+        RECT 5.610 396.000 5.890 400.000 ;
     END
   END osc_in
   PIN phi1_in
@@ -500,7 +516,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 84.270 396.000 84.550 400.000 ;
+        RECT 73.230 396.000 73.510 400.000 ;
     END
   END phi1_in
   PIN phi1_out
@@ -508,7 +524,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 122.910 396.000 123.190 400.000 ;
+        RECT 106.810 396.000 107.090 400.000 ;
     END
   END phi1_out
   PIN phi2_in
@@ -516,7 +532,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 110.030 396.000 110.310 400.000 ;
+        RECT 95.770 396.000 96.050 400.000 ;
     END
   END phi2_in
   PIN phi2_out
@@ -524,9 +540,17 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 97.150 396.000 97.430 400.000 ;
+        RECT 84.270 396.000 84.550 400.000 ;
     END
   END phi2_out
+  PIN phi_oen
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 118.310 396.000 118.590 400.000 ;
+    END
+  END phi_oen
   PIN sraddr_mux[0]
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
@@ -844,7 +868,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 330.370 396.000 330.650 400.000 ;
+        RECT 321.630 396.000 321.910 400.000 ;
     END
   END sync_bus
   PIN sync_in
@@ -852,9 +876,17 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 343.250 396.000 343.530 400.000 ;
+        RECT 332.670 396.000 332.950 400.000 ;
     END
   END sync_in
+  PIN sync_oen
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 344.170 396.000 344.450 400.000 ;
+    END
+  END sync_oen
   PIN vccd1
     DIRECTION INPUT ;
     USE POWER ;
@@ -888,7 +920,7 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 213.530 396.000 213.810 400.000 ;
+        RECT 197.430 396.000 197.710 400.000 ;
     END
   END ws_bus
   PIN ws_in
@@ -896,51 +928,55 @@ MACRO hp35_core
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 200.650 396.000 200.930 400.000 ;
+        RECT 185.930 396.000 186.210 400.000 ;
     END
   END ws_in
-  PIN ws_oe
+  PIN ws_oen
     DIRECTION OUTPUT TRISTATE ;
     USE SIGNAL ;
     PORT
       LAYER met2 ;
-        RECT 226.870 396.000 227.150 400.000 ;
+        RECT 208.470 396.000 208.750 400.000 ;
     END
-  END ws_oe
+  END ws_oen
   OBS
       LAYER li1 ;
         RECT 5.520 10.795 344.080 389.045 ;
       LAYER met1 ;
-        RECT 5.520 8.880 344.380 389.200 ;
+        RECT 5.520 9.220 344.470 389.200 ;
       LAYER met2 ;
-        RECT 7.090 395.720 19.130 396.000 ;
-        RECT 19.970 395.720 32.010 396.000 ;
-        RECT 32.850 395.720 44.890 396.000 ;
-        RECT 45.730 395.720 57.770 396.000 ;
-        RECT 58.610 395.720 70.650 396.000 ;
-        RECT 71.490 395.720 83.990 396.000 ;
-        RECT 84.830 395.720 96.870 396.000 ;
-        RECT 97.710 395.720 109.750 396.000 ;
-        RECT 110.590 395.720 122.630 396.000 ;
-        RECT 123.470 395.720 135.510 396.000 ;
-        RECT 136.350 395.720 148.850 396.000 ;
-        RECT 149.690 395.720 161.730 396.000 ;
-        RECT 162.570 395.720 174.610 396.000 ;
-        RECT 175.450 395.720 187.490 396.000 ;
-        RECT 188.330 395.720 200.370 396.000 ;
-        RECT 201.210 395.720 213.250 396.000 ;
-        RECT 214.090 395.720 226.590 396.000 ;
-        RECT 227.430 395.720 239.470 396.000 ;
-        RECT 240.310 395.720 252.350 396.000 ;
-        RECT 253.190 395.720 265.230 396.000 ;
-        RECT 266.070 395.720 278.110 396.000 ;
-        RECT 278.950 395.720 291.450 396.000 ;
-        RECT 292.290 395.720 304.330 396.000 ;
-        RECT 305.170 395.720 317.210 396.000 ;
-        RECT 318.050 395.720 330.090 396.000 ;
-        RECT 330.930 395.720 342.970 396.000 ;
-        RECT 6.540 4.280 343.520 395.720 ;
-        RECT 6.540 4.000 6.710 4.280 ;
+        RECT 6.170 395.720 16.370 396.000 ;
+        RECT 17.210 395.720 27.870 396.000 ;
+        RECT 28.710 395.720 38.910 396.000 ;
+        RECT 39.750 395.720 50.410 396.000 ;
+        RECT 51.250 395.720 61.450 396.000 ;
+        RECT 62.290 395.720 72.950 396.000 ;
+        RECT 73.790 395.720 83.990 396.000 ;
+        RECT 84.830 395.720 95.490 396.000 ;
+        RECT 96.330 395.720 106.530 396.000 ;
+        RECT 107.370 395.720 118.030 396.000 ;
+        RECT 118.870 395.720 129.530 396.000 ;
+        RECT 130.370 395.720 140.570 396.000 ;
+        RECT 141.410 395.720 152.070 396.000 ;
+        RECT 152.910 395.720 163.110 396.000 ;
+        RECT 163.950 395.720 174.610 396.000 ;
+        RECT 175.450 395.720 185.650 396.000 ;
+        RECT 186.490 395.720 197.150 396.000 ;
+        RECT 197.990 395.720 208.190 396.000 ;
+        RECT 209.030 395.720 219.690 396.000 ;
+        RECT 220.530 395.720 230.730 396.000 ;
+        RECT 231.570 395.720 242.230 396.000 ;
+        RECT 243.070 395.720 253.730 396.000 ;
+        RECT 254.570 395.720 264.770 396.000 ;
+        RECT 265.610 395.720 276.270 396.000 ;
+        RECT 277.110 395.720 287.310 396.000 ;
+        RECT 288.150 395.720 298.810 396.000 ;
+        RECT 299.650 395.720 309.850 396.000 ;
+        RECT 310.690 395.720 321.350 396.000 ;
+        RECT 322.190 395.720 332.390 396.000 ;
+        RECT 333.230 395.720 343.890 396.000 ;
+        RECT 5.620 4.280 344.440 395.720 ;
+        RECT 5.620 4.000 6.710 4.280 ;
         RECT 7.550 4.000 20.510 4.280 ;
         RECT 21.350 4.000 34.310 4.280 ;
         RECT 35.150 4.000 48.570 4.280 ;
@@ -965,7 +1001,7 @@ MACRO hp35_core
         RECT 301.490 4.000 314.450 4.280 ;
         RECT 315.290 4.000 328.710 4.280 ;
         RECT 329.550 4.000 342.510 4.280 ;
-        RECT 343.350 4.000 343.520 4.280 ;
+        RECT 343.350 4.000 344.440 4.280 ;
       LAYER met3 ;
         RECT 4.400 392.720 346.000 392.865 ;
         RECT 4.400 392.000 345.600 392.720 ;
@@ -1081,12 +1117,11 @@ MACRO hp35_core
         RECT 4.400 6.440 345.600 7.160 ;
         RECT 4.400 6.295 346.000 6.440 ;
       LAYER met4 ;
-        RECT 10.415 389.600 277.545 390.145 ;
-        RECT 10.415 123.935 20.640 389.600 ;
-        RECT 23.040 123.935 97.440 389.600 ;
-        RECT 99.840 123.935 174.240 389.600 ;
-        RECT 176.640 123.935 251.040 389.600 ;
-        RECT 253.440 123.935 277.545 389.600 ;
+        RECT 8.575 93.335 20.640 386.745 ;
+        RECT 23.040 93.335 97.440 386.745 ;
+        RECT 99.840 93.335 174.240 386.745 ;
+        RECT 176.640 93.335 251.040 386.745 ;
+        RECT 253.440 93.335 268.345 386.745 ;
   END
 END hp35_core
 END LIBRARY

@@ -24,8 +24,8 @@
 
 module hp35_core(
 `ifdef USE_POWER_PINS
-	.vccd1(vccd1),	// User area 1 1.8V power
-	.vssd1(vssd1),	// User area 1 digital ground
+	inout vccd1,	// User area 1 1.8V power
+	inout vssd1,	// User area 1 digital ground
 `endif
     // output [7:0] ROW,       // Keyboard Scan ROW,     Output from CTC
     // Use Q53 to save IO
@@ -37,34 +37,38 @@ module hp35_core(
     input        phi2_in,   // Global Clock Signal,   Input from External
     output       phi1_out,
     output       phi2_out,
+    output       phi_oen,
     input        PWO,       // CTC PWO Reset Control, Input from External
     output [4:0] DD,        // Display Bus,           Output from ARC
     output       START,     // Display Start Control, Output from ARC
     
     input        is_in,     // Instruction Bus,       Input to CTC
     output       is_bus,    // Instruction Bus,       Output from Internal ROM
-    output       is_oe,     // Instruction Bus,       Output Control from Internal ROM
+    output       is_oen,     // Instruction Bus,       Output Control from Internal ROM
+
     
     input        ws_in,     // Word Select Bus,  from CTC or ROM to ARC
     output       ws_bus,    // Word Select Bus,  from 
-    output       ws_oe,   
+    output       ws_oen,   
     input        bcd_in,    // BCD Peripheral Bus, from RAM to ARC
     output       bcd_bus,   // BCD Peripheral Bus, from ARC to RAM
-    output       bcd_oe,    // BCD Bus Enable,     from ARC to RAM
+    output       bcd_oen,   // BCD Bus Enable,     from ARC to RAM
     
     input        ia_in,     // Address Bus,           Only useful when the CTC is disabled
     output       ia_bus,    // Address Bus,           Output from CTC
+    output       ia_oen,
     output       carry_bus, // Carry,       from ARC to CTC
     input        carry_in,  // Carry input, used when the ARC is disabled
+    output       carry_oen,
     output       sync_bus,  // Global SYNC, from CTC to all
     input        sync_in,   // Global SYNC input, used when the CTC is disable
-
+    output       sync_oen,
     // When any of the following signals is not asserted,
     // The correosponding bus connection will be disabled, 
     // For the non-tristate design, it means that the MUX bus is now owned by the IO port
-    input        dbg_enable_arc,
-    input        dbg_enable_ctc,
-    input        dbg_enable_rom,
+    input        dbg_disable_arc,
+    input        dbg_disable_ctc,
+    input        dbg_disable_rom,
     input        dbg_arc_dummy,
     input        dbg_force_data,
     input [9:0]  dbg_romdata,
@@ -135,12 +139,13 @@ end
 
 assign phi1_out = ~phi1r;
 assign phi2_out = ~phi2r;
+assign phi_oen  = ~dbg_internal_cdiv;
 
 // Peripheral Bus
 wire       bcd_internal_active;
 wire       bcd_internal_drive;
 reg        bcd_bus;
-reg        bcd_oe;
+reg        bcd_oen;
 
 // Address Bus
 reg        ia_bus;  // Always driven by CTC, Loaded by the ROMs
@@ -150,7 +155,7 @@ wire       ia_internal_drive;
 wire [2:0] is_internal_active;  // Driven by ROM, Loaded by ARC / CTC
 wire [2:0] is_internal_drive;   // Driven by ROM, Loaded by ARC / CTC
 reg        is_bus;
-reg        is_oe;
+reg        is_oen;
 
 // Word Select Bus
 wire [2:0] ws_internal_active;      // Driven by the ROMs, Loaded by ARC
@@ -158,7 +163,11 @@ wire [2:0] ws_internal_drive;       // Driven by the ROMs, Loaded by ARC
 wire       ws_internal_active_ctc;  // Driven by CTC, Loaded by ARC
 wire       ws_internal_drive_ctc;   // Driven by CTC, Loaded by ARC
 reg        ws_bus;
-reg        ws_oe;
+reg        ws_oen;
+
+assign sync_oen  = ~dbg_disable_ctc;
+assign carry_oen = ~dbg_disable_arc;
+assign ia_oen    = ~dbg_disable_ctc;
 
 // SRAM Interface
 wire [7:0] sraddr[2:0];
@@ -169,9 +178,9 @@ wire [29:0] srdata;
 wire        sram_clk1;
 
 // Debug Connectors (To be connected to the Caravel LA interface)
-wire       dbg_enable_ctc;
-wire       dbg_enable_arc;
-wire       dbg_enable_rom;
+wire       dbg_disable_ctc;
+wire       dbg_disable_arc;
+wire       dbg_disable_rom;
 wire [2:0] dbg_rom_roe;
 wire       dbg_ctc_state1;
 wire [4:0] dbg_dsbf;
@@ -289,37 +298,37 @@ always @* begin
         default: ws_mux1 = 1'bx;
     endcase
 
-    casex ({dbg_enable_ctc, dbg_enable_rom, ws_internal_active_ctc, ws_internal_active_rom})
-        4'b111x: {ws_oe, ws_bus} = {1'b1, ws_internal_drive_ctc};   // CTC is in control
-        4'b1101: {ws_oe, ws_bus} = {1'b1, ws_mux1};                 // ROM is in control
-        4'b101x: {ws_oe, ws_bus} = {1'b1, ws_internal_drive_ctc};
-        4'b0101: {ws_oe, ws_bus} = {1'b1, ws_mux1};
-        default: {ws_oe, ws_bus} = {1'b0, ws_in};
+    casex ({~dbg_disable_ctc, ~dbg_disable_rom, ws_internal_active_ctc, ws_internal_active_rom})
+        4'b111x: {ws_oen, ws_bus} = {1'b0, ws_internal_drive_ctc};   // CTC is in control
+        4'b1101: {ws_oen, ws_bus} = {1'b0, ws_mux1};                 // ROM is in control
+        4'b101x: {ws_oen, ws_bus} = {1'b0, ws_internal_drive_ctc};
+        4'b0101: {ws_oen, ws_bus} = {1'b0, ws_mux1};
+        default: {ws_oen, ws_bus} = {1'b1, ws_in};
     endcase
 
     // BCD Bus (Peripheral)
-    casex ({dbg_enable_arc, bcd_internal_active})
-        2'b0x:   {bcd_oe, bcd_bus} = {1'b0, bcd_in};                // External ARC
-        2'b11:   {bcd_oe, bcd_bus} = {1'b1, bcd_internal_drive};    // ARC is in control
-        default: {bcd_oe, bcd_bus} = {1'b0, bcd_in};                // Nobody is in control
+    casex ({~dbg_disable_arc, bcd_internal_active})
+        2'b0x:   {bcd_oen, bcd_bus} = {1'b1, bcd_in};                // External ARC
+        2'b11:   {bcd_oen, bcd_bus} = {1'b0, bcd_internal_drive};    // ARC is in control
+        default: {bcd_oen, bcd_bus} = {1'b1, bcd_in};                // Nobody is in control
     endcase
 
     // Instruction Bus
-    casex ({dbg_enable_rom,is_internal_active})
-        4'b0xxx:  {is_oe, is_bus} = {1'b0, is_in               };    // External ROM
-        4'b1100:  {is_oe, is_bus} = {1'b1, is_internal_drive[2]};    // ROM 2 in control
-        4'b1010:  {is_oe, is_bus} = {1'b1, is_internal_drive[1]};    // ROM 1 in control
-        4'b1001:  {is_oe, is_bus} = {1'b1, is_internal_drive[0]};    // ROM 0 in control
-        default:  {is_oe, is_bus} = {1'b0, is_in               };    // Essentially nobody is in control
+    casex ({~dbg_disable_rom,is_internal_active})
+        4'b0xxx:  {is_oen, is_bus} = {1'b1, is_in               };    // External ROM
+        4'b1100:  {is_oen, is_bus} = {1'b0, is_internal_drive[2]};    // ROM 2 in control
+        4'b1010:  {is_oen, is_bus} = {1'b0, is_internal_drive[1]};    // ROM 1 in control
+        4'b1001:  {is_oen, is_bus} = {1'b0, is_internal_drive[0]};    // ROM 0 in control
+        default:  {is_oen, is_bus} = {1'b1, is_in               };    // Essentially nobody is in control
     endcase
 
     // Single-Drive Signals
-    case ({dbg_enable_ctc})
+    case ({~dbg_disable_ctc})
         1'b1:    {sync_bus, ia_bus} = {sync_drive_ctc, ia_internal_drive};
         default: {sync_bus, ia_bus} = {sync_in,        ia_in};
     endcase
 
-    case ({dbg_enable_arc})
+    case ({~dbg_disable_arc})
         1'b1:     carry_bus = carry_drive_arc;
         default:  carry_bus = carry_in;
     endcase

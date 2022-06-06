@@ -80,71 +80,80 @@ module user_project_wrapper #(
     // User maskable interrupt signals
     output [2:0] user_irq
 );
-
-/*--------------------------------------*/
-/* User project is instantiated  here   */
-/*--------------------------------------*/
-wire        dbg_detach_in;
+// wire        dbg_detach_in;
 wire [4:0]  col_in;
 wire        cdiv_rst_in;
 wire        dbg_internal_cdiv_in;
 wire        external_clock_in;
-reg         osc_in;
+wire        osc_in = wb_clk_i;
 wire        phi1_in;
 wire        phi2_in;
 wire        phi1_out;
 wire        phi2_out;
-wire        phi_oe;
+wire        phi_oen;
 wire        pwo_in;
 wire [4:0]  dd_out;
 wire        start_out;
 wire        is_in;
 wire        is_bus;
-wire        is_oe;
+wire        is_oen;
 wire        ws_in;
 wire        ws_bus;
-wire        ws_oe;
+wire        ws_oen;
 wire        bcd_in;
 wire        bcd_bus;
-wire        bcd_oe;
+wire        bcd_oen;
 wire        ia_in;
 wire        ia_bus;
-wire        ia_oe;
+wire        ia_oen;
 wire        carry_in;
 wire        carry_bus;
-wire        carry_oe;
+wire        carry_oen;
 wire        sync_in;
 wire        sync_bus;
-wire        sync_oe;
+wire        sync_oen;
 
 // Clock Divider Select
-wire [2:0]  dbg_cksel_in;
+wire [3:0]  dbg_cksel_in;
+/*
+reg  [5:0]  clkdiv_wb_r;
 reg  [5:0]  clkdiv_r;
-always @(posedge wb_clk_i) begin
-    if(wb_rst_i) clkdiv_r <= 1'b0;
+always @(posedge user_clock2) begin
+    if(wb_rst_i) clkdiv_r <= 6'b0;
     else         clkdiv_r <= clkdiv_r + 1'b1;
 end
-
+always @(posedge wb_clk_i) begin
+    if(wb_rst_i) clkdiv_wb_r <= 6'b0;
+    else         clkdiv_wb_r <= clkdiv_wb_r + 1'b1;
+end
 always @* begin
     case (dbg_cksel_in)
-        3'b000:  osc_in = external_clock_in;
-        3'b001:  osc_in = wb_clk_i;
-        3'b010:  osc_in = clkdiv_r[0];
-        3'b011:  osc_in = clkdiv_r[1];
-        3'b100:  osc_in = clkdiv_r[2];
-        3'b101:  osc_in = clkdiv_r[3];
-        3'b110:  osc_in = clkdiv_r[4];
-        3'b111:  osc_in = clkdiv_r[5];
+        4'b0000:  osc_in = external_clock_in;
+        4'b0001:  osc_in = wb_clk_i;
+        4'b0010:  osc_in = user_clock2;
+        4'b0011:  osc_in = clkdiv_wb_r[0];
+        4'b0100:  osc_in = clkdiv_wb_r[1];
+        4'b0101:  osc_in = clkdiv_wb_r[2];
+        4'b0110:  osc_in = clkdiv_wb_r[3];
+        4'b0111:  osc_in = clkdiv_wb_r[4];
+        4'b1000:  osc_in = clkdiv_wb_r[5];
+        4'b1001:  osc_in = clkdiv_r[0];
+        4'b1010:  osc_in = clkdiv_r[1];
+        4'b1011:  osc_in = clkdiv_r[2];
+        4'b1100:  osc_in = clkdiv_r[3];
+        4'b1101:  osc_in = clkdiv_r[4];
+        4'b1110:  osc_in = clkdiv_r[5];
+        4'b1111:  osc_in = phi1_in;
     endcase
 end
+*/
 
-wire        dbg_enable_arc_in;
-wire        dbg_enable_ctc_in;
-wire        dbg_enable_rom_in;
+wire        dbg_disable_arc_in;
+wire        dbg_disable_ctc_in;
+wire        dbg_disable_rom_in;
 wire        dbg_arc_dummy_in;
 wire        dbg_force_data_in;
 wire [9:0]  dbg_romdata_in;
-wire        dbg_sram_csb1_in;
 wire [4:0]  dbg_dsbf_out;
 wire        dbg_arc_t1_out;
 wire        dbg_arc_t4_out;
@@ -155,11 +164,7 @@ wire        dbg_ctc_state1_out;
 wire        dbg_ctc_kdn_out;
 wire [5:0]  dbg_ctc_q_out;
 
-// wire        dbg_busin_xor;  //
-// wire        dgb_busout_xor; //
 wire        dbg_oe_xor; // If I'm correct, the oeb signal is oe inverted
-                        // To avoid any error, the LA is able to invert all the oe bits
-                        // BTW, after reset, all the LA outputs are 0s.
 wire        sram_clk0;
 wire        sram_csb0;
 wire        sram_web0;
@@ -167,54 +172,59 @@ wire [7:0]  sram_addr0;
 wire [29:0] sram_din0;
 
 wire        sram_clk1;
-wire        dbg_sram_csb1;
+wire        dbg_sram_csb1_in;
 wire [7:0]  sraddr_mux;
 wire [31:0] srdata;
-
 // Assigning MPRJ_IO Ports
 assign io_out[31:29] = dbg_ctc_q_out[5:3];
-assign io_oeb[31:29] = {3{dbg_oe_xor}} ^ (~3'b111);     // All out 
+// assign io_oeb[31:29] = {3{dbg_oe_xor}} ^ (~3'b111);     // All out 
+assign io_oeb[31:29] = (~3'b111);     // All out 
 assign col_in[4:0]   = io_in[28:24];
-assign io_oeb[28:24] = {5{dbg_oe_xor}} ^ (~5'b00000);   // All input
+// assign io_oeb[28:24] = {5{dbg_oe_xor}} ^ (~5'b00000);   // All input
+assign io_oeb[28:24] = (~5'b00000);   // All input
 assign io_out[23:19] = dd_out;
-assign io_oeb[23:19] = {5{dbg_oe_xor}} ^ (~5'b11111);   // All output
+// assign io_oeb[23:19] = {5{dbg_oe_xor}} ^ (~5'b11111);   // All output
+assign io_oeb[23:19] = (~5'b11111);   // All output
 assign io_out[18]    = start_out;
-assign io_oeb[18]    = {1{dbg_oe_xor}} ^ (~1'b1);       // All output
+assign io_oeb[18]    = (~1'b1);       // All output
+assign pwo_in        = io_in[17];
+assign io_oeb[17]    = (~1'b0);       // All input
 assign io_out[16]    = phi2_out;
 assign phi2_in       = io_in[16];
 assign io_out[15]    = phi1_out;
 assign phi1_in       = io_in[15];
-assign io_oeb[16:15] = {2{dbg_oe_xor}} ^ ~{2{phi_oe}};
+assign io_oeb[16:15] = {2{phi_oen}};
 assign io_out[14]    = is_bus;
 assign is_in         = io_in[14];
-assign io_oeb[14]    = {1{dbg_oe_xor}} ^ ~is_oe;
+assign io_oeb[14]    = is_oen;
 assign io_out[13]    = ws_bus;
 assign ws_in         = io_in[13];
-assign io_oeb[13]    = {1{dbg_oe_xor}} ^ ~ws_oe;
+assign io_oeb[13]    = ws_oen;
 assign io_out[12]    = bcd_bus;
 assign bcd_in        = io_in[12];
-assign io_oeb[12]    = {1{dbg_oe_xor}} ^ ~bcd_oe;
+assign io_oeb[12]    = bcd_oen;
 assign io_out[11]    = ia_bus;
 assign ia_in         = io_in[11];
-assign io_oeb[11]    = {1{dbg_oe_xor}} ^ ~ia_oe;
+assign io_oeb[11]    = ia_oen;
 assign io_out[10]    = carry_bus;
 assign carry_in      = io_in[10];
-assign io_oeb[10]    = {1{dbg_oe_xor}} ^ ~carry_oe;
+assign io_oeb[10]    = carry_oen;
 assign io_out[ 9]    = sync_bus;
 assign sync_in       = io_in[ 9];
-assign io_oeb[ 9]    = {1{dbg_oe_xor}} ^ ~sync_oe;
+assign io_oeb[ 9]    = sync_oen;
 assign external_clock_in = io_in[8];
-assign io_oeb[ 8]    = {1{dbg_oe_xor}} ^ ~1'b0;
+// assign io_oeb[ 8]    = {1{dbg_oe_xor}} ^ ~1'b0;
+assign io_oeb[ 8]    = ~1'b0;
 
 // Assigning LA Ports
 // assign la_data_out[63:0] = TDC_dout;
-assign la_data_out[64]      = pwo_in;
-assign la_data_out[65]      = is_bus;
-assign la_data_out[66]      = ws_bus;
-assign la_data_out[67]      = bcd_bus;
-assign la_data_out[68]      = ia_bus;
-assign la_data_out[69]      = carry_bus;
-assign la_data_out[70]      = sync_bus;
+// assign la_data_out[64]      = pwo_in;
+// assign la_data_out[65]      = is_bus;
+// assign la_data_out[66]      = ws_bus;
+// assign la_data_out[67]      = bcd_bus;
+// assign la_data_out[68]      = ia_bus;
+// assign la_data_out[69]      = carry_bus;
+// assign la_data_out[70]      = sync_bus;
 assign la_data_out[74:71]   = dbg_dsbf_out;
 assign la_data_out[75]      = dbg_arc_t1_out;
 assign la_data_out[76]      = dbg_arc_t4_out;
@@ -223,8 +233,9 @@ assign la_data_out[78]      = dbg_arc_b1_out;
 assign la_data_out[81:79]   = dbg_rom_roe_out;
 assign la_data_out[82]      = dbg_ctc_state1_out;
 assign la_data_out[83]      = dbg_ctc_kdn_out;
-assign la_data_out[89:84]   = dbg_ctc_q_out;
-assign la_data_out[91:90]   = {phi1_out, phi2_out};
+// assign la_data_out[89:84]   = dbg_ctc_q_out;
+assign la_data_out[86:84]   = dbg_ctc_q_out[2:0];
+// assign la_data_out[91:90]   = {phi2_out, phi1_out};
 assign la_data_out[92]      = sram_clk1;
 assign la_data_out[100:93]  = sraddr_mux;
 
@@ -234,36 +245,54 @@ assign sram_csb0             = la_data_in[31];
 assign sram_clk0             = la_data_in[32];
 assign sram_addr0            = la_data_in[40:33];
 assign dbg_sram_csb1_in      = la_data_in[41];
-assign dbg_enable_arc_in     = la_data_in[42];
-assign dbg_enable_ctc_in     = la_data_in[43];
-assign dbg_enable_rom_in     = la_data_in[44];
+assign dbg_disable_arc_in     = la_data_in[42];
+assign dbg_disable_ctc_in     = la_data_in[43];
+assign dbg_disable_rom_in     = la_data_in[44];
 assign dbg_arc_dummy_in      = la_data_in[45];
 assign dbg_force_data_in     = la_data_in[46];
 assign dbg_romdata_in        = la_data_in[56:47];
 assign dbg_oe_xor            = la_data_in[57];
 assign cdiv_rst_in           = la_data_in[58];
 assign dbg_internal_cdiv_in  = la_data_in[59];
+assign dbg_cksel_in          = la_data_in[63:60];
+wire [3:0] sram_wmask0       = la_data_in[67:64];
+wire   sram_page             = la_data_in[126];
+wire   nc                    = la_data_in[127];
 
-
-
-
+assign wbs_ack_o            = nc;
+assign wbs_dat_o[31:0]      = 0;
+assign user_irq[2:0]        = 0;
+assign la_data_out[127:101] = 0;
+assign la_data_out[63:0]    = 0;
+assign io_out[37:32] = 0;
+assign io_out[28:24] = 0;
+assign io_out[17]    = 0;
+assign io_out[8:0]   = 0;
+// assign io_oeb[37:32] = {6{dbg_oe_xor}} ^ ~6'b000000;
+// assign io_oeb[7:0]   = {8{dbg_oe_xor}} ^ ~8'b00000000;
+assign io_oeb[37:32] = ~6'b000000;
+assign io_oeb[7:0]   = ~8'b00000000;
+/*
 sky130_sram_1kbyte_1rw1r_32x256_8 u_SRAM(
 `ifdef USE_POWER_PINS
 	.vccd1(vccd1),	// User area 1 1.8V power
 	.vssd1(vssd1),	// User area 1 digital ground
 `endif
     .clk0  (sram_clk0       ),
-    .addr0 (sram_addr0      ),
+    .addr0 ({sram_addr0}),
     .web0  (sram_web0       ),
-    .wmask0(4'b1111         ),
+    .wmask0(sram_wmask0     ),
     .csb0  (sram_csb0       ),
-    .din0  ({2'b0,sram_din0}),
+    .din0  ({{2{nc}},sram_din0}),
     .dout0 (                ),
     .clk1  (sram_clk1       ), // Synced to the posedge of PHI2
-    .csb1  (dbg_sram_csb1   ), // Should work when held 1'b0 all the way
-    .addr1 (sraddr_mux      ), // 
+    .csb1  (dbg_sram_csb1_in), // Should work when held 1'b0 all the way
+    .addr1 ({sraddr_mux}), // 
     .dout1 (srdata          )  // 
 );
+*/
+
+
 
 hp35_core u_hp35_core (
 `ifdef USE_POWER_PINS
@@ -278,27 +307,31 @@ hp35_core u_hp35_core (
     .phi2_in           (phi2_in              ),
     .phi1_out          (phi1_out             ),
     .phi2_out          (phi2_out             ),
+    .phi_oen           (phi_oen              ),
     .PWO               (pwo_in               ),
     .DD                (dd_out               ),
     .START             (start_out            ),
     .is_in             (is_in                ),
     .is_bus            (is_bus               ),
-    .is_oe             (is_oe                ),
+    .is_oen            (is_oen               ),
     .ws_in             (ws_in                ),
     .ws_bus            (ws_bus               ),
-    .ws_oe             (ws_oe                ),
+    .ws_oen            (ws_oen               ),
     .bcd_in            (bcd_in               ),
     .bcd_bus           (bcd_bus              ),
-    .bcd_oe            (bcd_oe               ),
+    .bcd_oen           (bcd_oen              ),
     .ia_in             (ia_in                ),
     .ia_bus            (ia_bus               ),
+    .ia_oen            (ia_oen               ),
     .carry_bus         (carry_bus            ),
     .carry_in          (carry_in             ),
+    .carry_oen         (carry_oen            ),
     .sync_bus          (sync_bus             ),
     .sync_in           (sync_in              ),
-    .dbg_enable_arc    (dbg_enable_arc_in    ),
-    .dbg_enable_ctc    (dbg_enable_ctc_in    ),
-    .dbg_enable_rom    (dbg_enable_rom_in    ),
+    .sync_oen          (sync_oen             ),
+    .dbg_disable_arc   (dbg_disable_arc_in   ),
+    .dbg_disable_ctc   (dbg_disable_ctc_in   ),
+    .dbg_disable_rom   (dbg_disable_rom_in   ),
     .dbg_arc_dummy     (dbg_arc_dummy_in     ),
     .dbg_force_data    (dbg_force_data_in    ),
     .dbg_romdata       (dbg_romdata_in       ),
@@ -317,44 +350,5 @@ hp35_core u_hp35_core (
     .srdata            (srdata[29:0]         )
 );
 
-
-/*
-user_proj_example mprj (
-`ifdef USE_POWER_PINS
-	.vccd1(vccd1),	// User area 1 1.8V power
-	.vssd1(vssd1),	// User area 1 digital ground
-`endif
-
-    .wb_clk_i(wb_clk_i),
-    .wb_rst_i(wb_rst_i),
-
-    // MGMT SoC Wishbone Slave
-
-    .wbs_cyc_i(wbs_cyc_i),
-    .wbs_stb_i(wbs_stb_i),
-    .wbs_we_i(wbs_we_i),
-    .wbs_sel_i(wbs_sel_i),
-    .wbs_adr_i(wbs_adr_i),
-    .wbs_dat_i(wbs_dat_i),
-    .wbs_ack_o(wbs_ack_o),
-    .wbs_dat_o(wbs_dat_o),
-
-    // Logic Analyzer
-
-    .la_data_in(la_data_in),
-    .la_data_out(la_data_out),
-    .la_oenb (la_oenb),
-
-    // IO Pads
-
-    .io_in (io_in),
-    .io_out(io_out),
-    .io_oeb(io_oeb),
-
-    // IRQ
-    .irq(user_irq)
-);
-
-*/
 endmodule	// user_project_wrapper
 `default_nettype wire
