@@ -54,28 +54,19 @@ set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
 ### Black-box verilog and views
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$::env(CARAVEL_ROOT)/verilog/rtl/defines.v \
-	$script_dir/../../verilog/rtl/patently-obvious/hp35_core.v\
-	$script_dir/../../verilog/rtl/DFFRAM.v"
+	$script_dir/../../verilog/rtl/patently-obvious/hp35_core.v"
 
 set ::env(EXTRA_LEFS) "\
-	$script_dir/../../lef/hp35_core.lef\
-	$script_dir/../../caravel/mgmt_core_wrapper/lef/DFFRAM.lef"
+	$script_dir/../../lef/hp35_core.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-	$script_dir/../../gds/hp35_core.gds\
-	$script_dir/../../caravel/mgmt_core_wrapper/gds/DFFRAM.gds"
+	$script_dir/../../gds/hp35_core.gds"
 
 ## Internal Macros
 #set ::env(EXTRA_LIBS) "\
 #	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/lib/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
 
 set ::env(RT_MAX_LAYER) {met4}
-
-
-set ::env(GLB_RT_OBS)   "li1 166 166 800 1000, \
-						met3 166 166 800 1000, \
-						met4 166 166 800 1000, \
-		       			met5 0 0 2920 3520"
 
 
 #set ::env(GLB_RT_OBS)   "li1 166 166 800 1000, \
