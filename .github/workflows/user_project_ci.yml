@@ -22,7 +22,7 @@ jobs:
       - name: Export PDK ROOT
         run: echo "PDK_ROOT=/home/runner/work/pdk" >> $GITHUB_ENV
       
-      - name: Export OPENLANE ROOT
+      - name: Export OPENLANE ROOTNo url found for submodule path 'caravel' in .gitmodules
         run: echo "OPENLANE_ROOT=/home/runner/work/caravel_user_project/openlane" >> $GITHUB_ENV
 
       - name: Install dependencies
@@ -139,21 +139,6 @@ jobs:
 
       - name: Harden using Openlane
         run: |
-          make user_proj_example
+          make hp35_core
           make user_project_wrapper
 
-      - name: Run DV RTL tests
-        run: |
-          make verify-io_ports-rtl 
-          make verify-la_test1-rtl 
-          make verify-la_test2-rtl 
-          make verify-mprj_stimulus-rtl 
-          make verify-wb_port-rtl
-
-      - name: Run DV GL tests
-        run: |
-          make verify-io_ports-gl 
-          make verify-la_test1-gl 
-          make verify-la_test2-gl 
-          make verify-mprj_stimulus-gl 
-          make verify-wb_port-gl
