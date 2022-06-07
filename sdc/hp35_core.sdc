@@ -1,6 +1,6 @@
 ###############################################################################
 # Created by write_sdc
-# Mon Jun  6 07:12:47 2022
+# Mon Jun  6 23:52:02 2022
 ###############################################################################
 current_design hp35_core
 ###############################################################################
@@ -35,11 +35,24 @@ set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_r
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_romdata[7]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_romdata[8]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_romdata[9]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_sram_cksel[0]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_sram_cksel[1]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_sram_cksel[2]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_sram_csb1}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_sram_wrmode[0]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {dbg_sram_wrmode[1]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {ia_in}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {is_in}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {phi1_in}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {phi2_in}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[0]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[1]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[2]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[3]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[4]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[5]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[6]}]
+set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {sraddr_in[7]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[0]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[10]}]
 set_input_delay 2.0000 -clock [get_clocks {osc_in}] -add_delay [get_ports {srdata[11]}]
@@ -208,6 +221,19 @@ set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_ris
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_romdata[2]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_romdata[1]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_romdata[0]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_sram_cksel[2]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_sram_cksel[1]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_sram_cksel[0]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_sram_wrmode[1]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {dbg_sram_wrmode[0]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[7]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[6]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[5]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[4]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[3]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[2]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[1]}]
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {sraddr_in[0]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[29]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[28]}]
 set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin {Y} -input_transition_rise 0.0000 -input_transition_fall 0.0000 [get_ports {srdata[27]}]

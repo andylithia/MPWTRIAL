@@ -112,7 +112,8 @@ wire        carry_oen;
 wire        sync_in;
 wire        sync_bus;
 wire        sync_oen;
-
+wire [2:0]  dbg_sram_cksel_in;
+wire [1:0]  dbg_sram_wrmode_in;
 // Clock Divider Select
 wire [3:0]  dbg_cksel_in;
 /*
@@ -236,18 +237,19 @@ assign la_data_out[83]      = dbg_ctc_kdn_out;
 // assign la_data_out[89:84]   = dbg_ctc_q_out;
 assign la_data_out[86:84]   = dbg_ctc_q_out[2:0];
 // assign la_data_out[91:90]   = {phi2_out, phi1_out};
-assign la_data_out[92]      = sram_clk1;
+// assign la_data_out[92]      = sram_clk1;
 assign la_data_out[100:93]  = sraddr_mux;
 
-assign sram_din0             = la_data_in[29:0];
-assign sram_web0             = la_data_in[30];
-assign sram_csb0             = la_data_in[31];
-assign sram_clk0             = la_data_in[32];
+assign srdata                = la_data_in[29:0];
+// assign sram_din0             = la_data_in[29:0];
+// assign sram_web0             = la_data_in[30];
+// assign sram_csb0             = la_data_in[31];
+// assign sram_clk0             = la_data_in[32];
 assign sram_addr0            = la_data_in[40:33];
 assign dbg_sram_csb1_in      = la_data_in[41];
-assign dbg_disable_arc_in     = la_data_in[42];
-assign dbg_disable_ctc_in     = la_data_in[43];
-assign dbg_disable_rom_in     = la_data_in[44];
+assign dbg_disable_arc_in    = la_data_in[42];
+assign dbg_disable_ctc_in    = la_data_in[43];
+assign dbg_disable_rom_in    = la_data_in[44];
 assign dbg_arc_dummy_in      = la_data_in[45];
 assign dbg_force_data_in     = la_data_in[46];
 assign dbg_romdata_in        = la_data_in[56:47];
@@ -256,12 +258,14 @@ assign cdiv_rst_in           = la_data_in[58];
 assign dbg_internal_cdiv_in  = la_data_in[59];
 assign dbg_cksel_in          = la_data_in[63:60];
 wire [3:0] sram_wmask0       = la_data_in[67:64];
+assign dbg_sram_cksel_in     = la_data_in[70:68];
+assign dbg_sram_wrmode_in    = la_data_in[72:71];
 wire   sram_page             = la_data_in[126];
 wire   nc                    = la_data_in[127];
 
 assign wbs_ack_o            = nc;
 assign wbs_dat_o[31:0]      = 0;
-assign user_irq[2:0]        = 0;
+assign user_irq[2:0]        = {2'b0, sram_clk1};
 assign la_data_out[127:101] = 0;
 assign la_data_out[63:0]    = 0;
 assign io_out[37:32] = 0;
@@ -272,27 +276,23 @@ assign io_out[8:0]   = 0;
 // assign io_oeb[7:0]   = {8{dbg_oe_xor}} ^ ~8'b00000000;
 assign io_oeb[37:32] = ~6'b000000;
 assign io_oeb[7:0]   = ~8'b00000000;
+
+// Instantiate DFFRAM
 /*
-sky130_sram_1kbyte_1rw1r_32x256_8 u_SRAM(
+DFFRAM u_DFFRAM (
 `ifdef USE_POWER_PINS
-	.vccd1(vccd1),	// User area 1 1.8V power
-	.vssd1(vssd1),	// User area 1 digital ground
+	.VPWR(vccd1),	// User area 1 1.8V power
+	.VGND(vssd1),	// User area 1 digital ground
 `endif
-    .clk0  (sram_clk0       ),
-    .addr0 ({sram_addr0}),
-    .web0  (sram_web0       ),
-    .wmask0(sram_wmask0     ),
-    .csb0  (sram_csb0       ),
-    .din0  ({{2{nc}},sram_din0}),
-    .dout0 (                ),
-    .clk1  (sram_clk1       ), // Synced to the posedge of PHI2
-    .csb1  (dbg_sram_csb1_in), // Should work when held 1'b0 all the way
-    .addr1 ({sraddr_mux}), // 
-    .dout1 (srdata          )  // 
+    .CLK(sram_clk1  ),
+    .WE (sram_wmask0),
+    .EN (sram_csb0  ),
+    .A  (sraddr_mux ),
+    .Di ({nc,nc,sram_din0}  ),
+    .Do (srdata     )
 );
 */
-
-
+// assign 
 
 hp35_core u_hp35_core (
 `ifdef USE_POWER_PINS
@@ -345,9 +345,12 @@ hp35_core u_hp35_core (
     .dbg_ctc_state1    (dbg_ctc_state1_out   ),
     .dbg_ctc_kdn       (dbg_ctc_kdn_out      ),
     .dbg_ctc_q         (dbg_ctc_q_out        ),
-    .sram_clk1         (sram_clk1            ),
-    .sraddr_mux        (sraddr_mux           ),
-    .srdata            (srdata[29:0]         )
+    .dbg_sram_cksel    (dbg_sram_cksel_in    ),
+    .sraddr_in         (sram_addr0           ),
+    .dbg_sram_wrmode   (dbg_sram_wrmode_in   ),
+    .sram_clk1         (sram_clk1            ), // Out
+    .sraddr_mux        (sraddr_mux           ), // Out
+    .srdata            (srdata[29:0]         )  // In
 );
 
 endmodule	// user_project_wrapper

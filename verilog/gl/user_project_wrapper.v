@@ -79,36 +79,6 @@ module user_project_wrapper (user_clock2,
  wire dbg_ctc_kdn_out;
  wire sram_clk1;
  wire \dbg_dsbf_out[4] ;
- wire \srdata[0] ;
- wire \srdata[10] ;
- wire \srdata[11] ;
- wire \srdata[12] ;
- wire \srdata[13] ;
- wire \srdata[14] ;
- wire \srdata[15] ;
- wire \srdata[16] ;
- wire \srdata[17] ;
- wire \srdata[18] ;
- wire \srdata[19] ;
- wire \srdata[1] ;
- wire \srdata[20] ;
- wire \srdata[21] ;
- wire \srdata[22] ;
- wire \srdata[23] ;
- wire \srdata[24] ;
- wire \srdata[25] ;
- wire \srdata[26] ;
- wire \srdata[27] ;
- wire \srdata[28] ;
- wire \srdata[29] ;
- wire \srdata[2] ;
- wire \srdata[3] ;
- wire \srdata[4] ;
- wire \srdata[5] ;
- wire \srdata[6] ;
- wire \srdata[7] ;
- wire \srdata[8] ;
- wire \srdata[9] ;
 
  hp35_core u_hp35_core (.PWO(io_in[17]),
     .START(start_out),
@@ -187,6 +157,19 @@ module user_project_wrapper (user_clock2,
     la_data_in[49],
     la_data_in[48],
     la_data_in[47]}),
+    .dbg_sram_cksel({la_data_in[70],
+    la_data_in[69],
+    la_data_in[68]}),
+    .dbg_sram_wrmode({la_data_in[72],
+    la_data_in[71]}),
+    .sraddr_in({la_data_in[40],
+    la_data_in[39],
+    la_data_in[38],
+    la_data_in[37],
+    la_data_in[36],
+    la_data_in[35],
+    la_data_in[34],
+    la_data_in[33]}),
     .sraddr_mux({la_data_out[100],
     la_data_out[99],
     la_data_out[98],
@@ -195,36 +178,36 @@ module user_project_wrapper (user_clock2,
     la_data_out[95],
     la_data_out[94],
     la_data_out[93]}),
-    .srdata({\srdata[29] ,
-    \srdata[28] ,
-    \srdata[27] ,
-    \srdata[26] ,
-    \srdata[25] ,
-    \srdata[24] ,
-    \srdata[23] ,
-    \srdata[22] ,
-    \srdata[21] ,
-    \srdata[20] ,
-    \srdata[19] ,
-    \srdata[18] ,
-    \srdata[17] ,
-    \srdata[16] ,
-    \srdata[15] ,
-    \srdata[14] ,
-    \srdata[13] ,
-    \srdata[12] ,
-    \srdata[11] ,
-    \srdata[10] ,
-    \srdata[9] ,
-    \srdata[8] ,
-    \srdata[7] ,
-    \srdata[6] ,
-    \srdata[5] ,
-    \srdata[4] ,
-    \srdata[3] ,
-    \srdata[2] ,
-    \srdata[1] ,
-    \srdata[0] }));
+    .srdata({la_data_in[29],
+    la_data_in[28],
+    la_data_in[27],
+    la_data_in[26],
+    la_data_in[25],
+    la_data_in[24],
+    la_data_in[23],
+    la_data_in[22],
+    la_data_in[21],
+    la_data_in[20],
+    la_data_in[19],
+    la_data_in[18],
+    la_data_in[17],
+    la_data_in[16],
+    la_data_in[15],
+    la_data_in[14],
+    la_data_in[13],
+    la_data_in[12],
+    la_data_in[11],
+    la_data_in[10],
+    la_data_in[9],
+    la_data_in[8],
+    la_data_in[7],
+    la_data_in[6],
+    la_data_in[5],
+    la_data_in[4],
+    la_data_in[3],
+    la_data_in[2],
+    la_data_in[1],
+    la_data_in[0]}));
  assign io_oeb[0] = one_;
  assign io_oeb[10] = carry_oen;
  assign io_oeb[11] = ia_oen;
@@ -389,9 +372,8 @@ module user_project_wrapper (user_clock2,
  assign la_data_out[82] = dbg_ctc_state1_out;
  assign la_data_out[83] = dbg_ctc_kdn_out;
  assign la_data_out[8] = zero_;
- assign la_data_out[92] = sram_clk1;
  assign la_data_out[9] = zero_;
- assign user_irq[0] = zero_;
+ assign user_irq[0] = sram_clk1;
  assign user_irq[1] = zero_;
  assign user_irq[2] = zero_;
  assign wbs_ack_o = la_data_in[127];

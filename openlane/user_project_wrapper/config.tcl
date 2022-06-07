@@ -46,7 +46,7 @@ set ::env(CLOCK_PERIOD) "10"
 ### Macro PDN Connections
 set ::env(FP_PDN_MACRO_HOOKS) "\
 	u_hp35_core vccd1 vssd1 \
-	u_SRAM vccd1 vssd1"
+	u_DFFRAM    vccd1 vssd1"
 
 ### Macro Placement
 set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
@@ -55,15 +55,15 @@ set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$::env(CARAVEL_ROOT)/verilog/rtl/defines.v \
 	$script_dir/../../verilog/rtl/patently-obvious/hp35_core.v\
-	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/verilog/sky130_sram_1kbyte_1rw1r_32x256_8.v"
+	$script_dir/../../verilog/rtl/DFFRAM.v"
 
 set ::env(EXTRA_LEFS) "\
-	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/lef/sky130_sram_1kbyte_1rw1r_32x256_8.lef\
-	$script_dir/../../lef/hp35_core.lef"
+	$script_dir/../../lef/hp35_core.lef\
+	$script_dir/../../caravel/mgmt_core_wrapper/lef/DFFRAM.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-	$::env(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/gds/sky130_sram_1kbyte_1rw1r_32x256_8.gds\
-	$script_dir/../../gds/hp35_core.gds"
+	$script_dir/../../gds/hp35_core.gds\
+	$script_dir/../../caravel/mgmt_core_wrapper/gds/DFFRAM.gds"
 
 ## Internal Macros
 #set ::env(EXTRA_LIBS) "\
@@ -72,12 +72,18 @@ set ::env(EXTRA_GDS_FILES) "\
 set ::env(RT_MAX_LAYER) {met4}
 
 
-set ::env(GLB_RT_OBS)   "li1 500.00 1000.00 979.78 1397.5, \
-						met1 500.00 1000.00 979.78 1397.5, \
-						met2 500.00 1000.00 979.78 1397.5, \
-						met3 500.00 1000.00 979.78 1397.5, \
-						met4 500.00 1000.00 979.78 1397.5, \
+set ::env(GLB_RT_OBS)   "li1 166 166 800 1000, \
+						met3 166 166 800 1000, \
+						met4 166 166 800 1000, \
 		       			met5 0 0 2920 3520"
+
+
+#set ::env(GLB_RT_OBS)   "li1 166 166 800 1000, \
+#						met1 166 166 800 1000, \
+#						met2 166 166 800 1000, \
+#						met3 166 166 800 1000, \
+#						met4 166 166 800 1000, \
+#		       			met5 0 0 2920 3520"
 
 
 # disable pdn check nodes becuase it hangs with multiple power domains.

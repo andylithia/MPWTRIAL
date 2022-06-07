@@ -84,21 +84,15 @@ module hp35_core(
     output [5:0] dbg_ctc_q,
 
     // SRAM WR Port
-    /*
-    input         sram_clk0,
-    input         sram_csb0,
-    input         sram_web0,
-    input [7:0]   sram_addr0,
-//    input         sram_sdin,            // The input is serialized to save some IO pins
-//    input         sram_wclk             // /
-//    input [3:0]   sram_wmask0,
-    input [31:0]  sram_din0
-    // output [31:0] sram_dout0        // Unconnected
-    */
 
     // Update Jun 4: The SRAM is causing P&R issues
     // Moving it to the top level
 
+    // Because the top level can't contain circuits
+    // The address MUX is implemented here
+    input  [2:0]  dbg_sram_cksel,
+    input  [7:0]  sraddr_in,
+    input  [1:0]  dbg_sram_wrmode,
     output        sram_clk1,
     output [7:0]  sraddr_mux,
     input  [29:0] srdata
@@ -172,10 +166,30 @@ assign ia_oen    = ~dbg_disable_ctc;
 // SRAM Interface
 wire [7:0] sraddr[2:0];
 wire [2:0] srprelatch;
-wire [7:0] sraddr_mux;
+reg [7:0]  sraddr_mux;
 // reg [31:0] srdata;
 wire [29:0] srdata;
-wire        sram_clk1;
+reg        sram_clk1;
+always @* begin
+    case (dbg_sram_wrmode)
+        2'b11: sraddr_mux = sraddr_in;
+        2'b00: sraddr_mux = sraddr[0]; 
+        2'b01: sraddr_mux = sraddr[1]; 
+        2'b10: sraddr_mux = sraddr[2]; 
+    endcase
+
+    case (dbg_sram_cksel)
+        3'b000:  sram_clk1 =  phi2; 
+        3'b001:  sram_clk1 = ~phi2; 
+        3'b010:  sram_clk1 =  phi1;
+        3'b011:  sram_clk1 = ~phi1;
+        3'b100:  sram_clk1 = 1'b1;
+        3'b101:  sram_clk1 = 1'b0; 
+        default: sram_clk1 = 1'bx;
+    endcase
+end
+
+
 
 // Debug Connectors (To be connected to the Caravel LA interface)
 wire       dbg_disable_ctc;
@@ -258,8 +272,6 @@ generate
 endgenerate
 
 // The three ROMs should receive the same sraddr
-assign sraddr_mux = sraddr[0];
-assign sram_clk1  = phi2;
 /*
 reg [31:0] sram_pdr;
 always @(posedge sram_wclk) begin

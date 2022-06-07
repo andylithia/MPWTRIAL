@@ -49,7 +49,7 @@ set ::env(SYNTH_READ_BLACKBOX_LIB) 1
 ## Floorplan
 set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
 set ::env(FP_SIZING) absolute
-set ::env(DIE_AREA) "0 0 350 400"
+set ::env(DIE_AREA) "0 0 300 400"
 
 set ::env(PL_TARGET_DENSITY) 0.35
 set ::env(CELL_PAD) 0
@@ -97,4 +97,3 @@ set ::env(RUN_CVC) 1
 
 ## Diode Insertion
 set ::env(DIODE_INSERTION_STRATEGY) 4 
-
